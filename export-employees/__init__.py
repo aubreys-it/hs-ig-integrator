@@ -1,5 +1,6 @@
 import azure.functions as func
 import logging
+import json
 
 #app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
@@ -18,7 +19,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if name:
         name=name[::-1]
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+        payload = {
+            "name": name,
+            "message": "Hello, {}. This HTTP triggered function executed successfully.".format(name)
+        }
+        return json.dumps(payload, ensure_ascii=False, indent=4, separators=(',', ': '), sort_keys=True)
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
