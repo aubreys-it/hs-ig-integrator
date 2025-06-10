@@ -8,12 +8,11 @@ company_id = 964328777
 concepts = {
     5: 1590
 }
-i=0
 
 def create_employee_file(json_data):
     data = json.loads(json_data)
     out_file=[]
-
+    i=0
     for row in data:
         logging.info(f'{i}: {EmpId}')
         CompanyNumber = company_id
