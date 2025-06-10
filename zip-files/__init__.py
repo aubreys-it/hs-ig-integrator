@@ -28,6 +28,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     with zipfile.ZipFile(os.path.join(tempPath, zipfile_name), 'w', zipfile.ZIP_DEFLATED) as zipf:
         for blob in blobs_list:
             if blob.name.startswith(datetime.today().strftime('%Y%m%d')):
+                blob_client = container_client.get_blob_client(blob)
+                with open(os.path.join(tempPath, blob.name), 'wb') as f:
+                    data = blob_client.download_blob()
+                    f.write(data.readall())
                 logging.info(f'Adding {blob.name} to zip file.')
                 zipf.write(os.path.join(tempPath, blob.name), arcname=blob.name)
                 req_body = blob.name
