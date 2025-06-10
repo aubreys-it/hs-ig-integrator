@@ -17,16 +17,27 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     container_client = ContainerClient.from_container_url(os.environ.get('UPLOADS_URL'))
     blobs_list = container_client.list_blobs()
     req_body = None
-    for blob in blobs_list:
-        if blob.name.startswith(datetime.today().strftime('%Y%m%d')):
-            logging.info(f'Found blob: {blob.name}')
-            blob_client = container_client.get_blob_client(blob)
-            with open(os.path.join(tempPath, zipfile_name), 'wb') as f:
-                data = blob_client.download_blob()
-                f.write(data.readall())
-            logging.info(f'Blob {blob.name} downloaded to {tempPath}/{zipfile_name}')
+    #for blob in blobs_list:
+    #    if blob.name.startswith(datetime.today().strftime('%Y%m%d')):
+    #        logging.info(f'Found blob: {blob.name}')
+    #        blob_client = container_client.get_blob_client(blob)
+    #        with open(os.path.join(tempPath, blob.name), 'wb') as f:
+    #            data = blob_client.download_blob()
+    #            f.write(data.readall())
+    #        logging.info(f'Blob {blob.name} downloaded to {tempPath}/{zipfile_name}')
     with zipfile.ZipFile(os.path.join(tempPath, zipfile_name), 'w', zipfile.ZIP_DEFLATED) as zipf:
-        zipf.write(os.path.join(tempPath, zipfile_name), arcname=blob.name)
+        for blob in blobs_list:
+            if blob.name.startswith(datetime.today().strftime('%Y%m%d')):
+                logging.info(f'Adding {blob.name} to zip file.')
+                zipf.write(os.path.join(tempPath, blob.name), arcname=blob.name)
+                req_body = blob.name
+    if req_body:
+        logging.info(f'Adding zip file {zipfile_name} to the zip archive.')
+        # Add the zip file itself to the zip archive
+        zipf = zipfile.ZipFile(os.path.join(tempPath, zipfile_name), 'a', zipfile.ZIP_DEFLATED)
+        # Add the zip file to the archive
+        zipf.close()
+        logging.info(f'Zip file {zipfile_name} created successfully.')
         req_body= zipfile_name
 
     if not req_body:
