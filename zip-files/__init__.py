@@ -54,6 +54,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 f.write(data.readall())
             with zipfile.ZipFile(os.path.join(tempPath, zipfile_name), 'w', zipfile.ZIP_DEFLATED) as zipf:
                 zipf.write(os.path.join(tempPath, zipfile_name), arcname=blob.name)
+            req_body= zipfile_name
             logging.info(f'Zipped folder: {zipfile_name}')
     if not req_body:
         logging.info('No blobs found for today.')
