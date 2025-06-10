@@ -59,7 +59,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     try:
-        req_body = req.get_json()
+        req_body = req.get_json()[1:-1]  # Remove the first and last characters (assumed to be brackets)
         logging.info(f"Request body: {req_body}")
     except ValueError:
         pass
