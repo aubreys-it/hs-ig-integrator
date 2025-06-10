@@ -1,6 +1,10 @@
+from datetime import datetime
+from azure.storage.blob import ContainerClient
+import os
+
 def get_blob_folder():
     today = datetime.now()
-    container = ContainerClient.from_container_url(uploads_url)
+    container = ContainerClient.from_container_url(os.environ.get("UPLOADS_URL"))
     blobs = container.list_blobs()
     for blob in blobs:
         if today.strftime("%Y%m%d") in blob.name:
