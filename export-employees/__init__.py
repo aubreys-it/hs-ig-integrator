@@ -2,6 +2,7 @@ import azure.functions as func
 import logging, os, json
 from datetime import datetime
 from azure.storage.blob import ContainerClient
+from ..modules import core
 
 uploads_url = os.environ.get("UPLOADS_URL")
 company_id = 964328777
@@ -39,22 +40,9 @@ def create_employee_file(json_data):
         
     return ''.join(out_file)
 
-def get_blob_folder():
-    today = datetime.now()
-    container = ContainerClient.from_container_url(uploads_url)
-    blobs = container.list_blobs()
-    for blob in blobs:
-        if today.strftime("%Y%m%d") in blob.name:
-            folder = blob.name.split('/')[0]
-            break
-    try:
-        return folder
-    except NameError:
-        return today.strftime("%Y%m%d_%H%M%S")
-
 def upload_employee_file(out_file):
     container = ContainerClient.from_container_url(uploads_url)
-    blob_name = f"{get_blob_folder()}/empl_master_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    blob_name = f"{core.get_blob_folder()}/empl_master_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     blob_client = container.get_blob_client(blob_name)
     blob_client.upload_blob(out_file, overwrite=True)
     return {"blob_file": f"{uploads_url}/{blob_name}"}
