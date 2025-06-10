@@ -11,7 +11,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     container_client = ContainerClient.from_container_url(os.environ.get('UPLOADS_URL'))
     blobs=container_client.list_blobs()
     zip_buffer = io.BytesIO()
-
+    zip_file = 'aubreysinc_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '.zip'
+    
     with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
         for blob in blobs:
             if datetime.today().strftime('%Y%m%d') in blob.name:
