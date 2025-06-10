@@ -55,7 +55,7 @@ def get_blob_folder():
 
 def upload_employee_file(out_file):
     container = ContainerClient.from_container_url(uploads_url)
-    blob_name = f"{get_blob_folder()}/empl_master_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    blob_name = f"{get_blob_folder()}/empl_master_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     blob_client = container.get_blob_client(blob_name)
     blob_client.upload_blob(out_file, overwrite=True)
     return f'"blob_file": "{uploads_url}/{blob_name}"'
