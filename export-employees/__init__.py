@@ -60,6 +60,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         req_body = req.get_json()
+        logging.info(f"Request body: {req_body}")
     except ValueError:
         pass
         
