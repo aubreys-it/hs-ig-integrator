@@ -1,6 +1,6 @@
 import azure.functions as func
 import logging, os
-from zipfile import ZipFile
+import zipfile
 from datetime import datetime
 from azure.storage.blob import ContainerClient
 from ..modules import core
@@ -52,7 +52,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             with open(os.path.join(tempPath, zipfile_name), 'wb') as f:
                 data = blob_client.download_blob()
                 f.write(data.readall())
-            with ZipFile(os.path.join(tempPath, zipfile_name), 'w', ZIP_DEFLATED) as zipf:
+            with zipfile.ZipFile(os.path.join(tempPath, zipfile_name), 'w', zipfile.ZIP_DEFLATED) as zipf:
                 zipf.write(os.path.join(tempPath, zipfile_name), arcname=blob.name)
             logging.info(f'Zipped folder: {zipfile_name}')
     if not req_body:
