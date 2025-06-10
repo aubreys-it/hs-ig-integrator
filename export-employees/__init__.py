@@ -16,7 +16,6 @@ def create_employee_file(json_data):
         logging.info(f"{row['EmpID']}: {row['StoreNum']}")
         CompanyNumber = company_id
         ConceptNumber = concepts.get(row['StoreNum'], 99)  # Default to 99 if not found
-        #ConceptNumber=99
         StoreNum = row['StoreNum']
         EmpID = row['EmpID']
         FirstName = row['FirstName']
@@ -33,10 +32,11 @@ def create_employee_file(json_data):
         BirthDate = row['BirthDate']
         EmpStatus = row['EmpStatus']
 
-        out_row = f"{CompanyNumber}|{ConceptNumber}|{StoreNum}|{EmpID}|{FirstName}|" \
-            f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
-            f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}||{BirthDate}|{EmpStatus}\n"
-        out_file.append(out_row)
+        if ConceptNumber !=99:
+            out_row = f"{CompanyNumber}|{ConceptNumber}|{StoreNum}|{EmpID}|{FirstName}|" \
+                f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
+                f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}||{BirthDate}|{EmpStatus}\n"
+            out_file.append(out_row)
         
     return ''.join(out_file)
 
