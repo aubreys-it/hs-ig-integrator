@@ -12,12 +12,11 @@ concepts = {
 def create_employee_file(json_data):
     data = json.loads(json_data)
     out_file=[]
-    i=0
     for row in data:
-        logging.info(f"{i}: {row['EmpID']}: row['StoreNum']")
+        logging.info(f"{row['EmpID']}: {row['StoreNum']}")
         CompanyNumber = company_id
-        #ConceptNumber = concepts[row['StoreNum']]
-        ConceptNumber=99
+        ConceptNumber = concepts.get(row['StoreNum'], 99)  # Default to 99 if not found
+        #ConceptNumber=99
         StoreNum = row['StoreNum']
         EmpID = row['EmpID']
         FirstName = row['FirstName']
@@ -38,7 +37,7 @@ def create_employee_file(json_data):
             f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
             f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}||{BirthDate}|{EmpStatus}\n"
         out_file.append(out_row)
-        i+=1
+        
     return ''.join(out_file)
 
 def get_blob_folder():
