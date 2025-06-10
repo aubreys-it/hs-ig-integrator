@@ -8,12 +8,14 @@ company_id = 964328777
 concepts = {
     5: 1590
 }
+i=0
 
 def create_employee_file(json_data):
     data = json.loads(json_data)
     out_file=[]
 
     for row in data:
+        logging.info(f'{i}: {EmpId}')
         CompanyNumber = company_id
         ConceptNumber = concepts[row['StoreNum']]
         StoreNum = row['StoreNum']
@@ -36,6 +38,7 @@ def create_employee_file(json_data):
             f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
             f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}||{BirthDate}|{EmpStatus}\n"
         out_file.append(out_row)
+        i+=1
     return ''.join(out_file)
 
 def get_blob_folder():
@@ -60,7 +63,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         req_body = str(req.get_json()).replace("'", '"')
-        logging.info(f"Request body: {req_body}")
     except ValueError:
         pass
         
