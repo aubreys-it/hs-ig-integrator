@@ -83,6 +83,4 @@ jobs:
           scm-do-build-during-deployment: true
           enable-oryx-build: true
           remote-build: true
-          AppSettings: '-WEBSITE_RUN_FROM_PACKAGE=0'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_63AC3FA0016D42D3B1375B1F01665A25 }}
           
