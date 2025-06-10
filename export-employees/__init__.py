@@ -14,9 +14,10 @@ def create_employee_file(json_data):
     out_file=[]
     i=0
     for row in data:
-        logging.info(f"{i}: {row['EmpID']}")
+        logging.info(f"{i}: {row['EmpID']}: row['StoreNum']")
         CompanyNumber = company_id
-        ConceptNumber = concepts[row['StoreNum']]
+        #ConceptNumber = concepts[row['StoreNum']]
+        ConceptNumber=99
         StoreNum = row['StoreNum']
         EmpID = row['EmpID']
         FirstName = row['FirstName']
