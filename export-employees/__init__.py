@@ -1,7 +1,6 @@
 import azure.functions as func
 import logging, os, json
 import datetime
-import pandas as pd
 from azure.storage.blob import ContainerClient
 
 uploads_url = os.environ.get("UPLOADS_URL")
@@ -12,10 +11,9 @@ concepts = {
 
 def create_employee_file(json_data):
     data = json.loads(json_data)
-    df = pd.DataFrame(data)
     out_file=[]
 
-    for idx, row in df.iterrows():
+    for row in data:
         CompanyNumber = company_id
         ConceptNumber = concepts[row['StoreNum']]
         StoreNum = row['StoreNum']
@@ -33,7 +31,6 @@ def create_employee_file(json_data):
         HireDate = row['HireDate']
         BirthDate = row['BirthDate']
         EmpStatus = row['EmpStatus']
-        logging.info(f"Processing employee: {EmpID}, Store: {StoreNum}")
 
         out_row = f"{CompanyNumber}|{ConceptNumber}|{StoreNum}|{EmpID}|{FirstName}|" \
             f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
