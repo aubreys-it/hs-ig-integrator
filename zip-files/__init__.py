@@ -6,34 +6,6 @@ from azure.storage.blob import ContainerClient
 from ..modules import core
 import json
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     tempPath = os.environ.get('TEMP', '/tmp')
@@ -52,10 +24,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             with open(os.path.join(tempPath, zipfile_name), 'wb') as f:
                 data = blob_client.download_blob()
                 f.write(data.readall())
-            with zipfile.ZipFile(os.path.join(tempPath, zipfile_name), 'w', zipfile.ZIP_DEFLATED) as zipf:
-                zipf.write(os.path.join(tempPath, zipfile_name), arcname=blob.name)
-            req_body= zipfile_name
-            logging.info(f'Zipped folder: {zipfile_name}')
+            logging.info(f'Blob {blob.name} downloaded to {tempPath}/{zipfile_name}')
+    with zipfile.ZipFile(os.path.join(tempPath, zipfile_name), 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zipf.write(os.path.join(tempPath, zipfile_name), arcname=blob.name)
+        req_body= zipfile_name
+
     if not req_body:
         logging.info('No blobs found for today.')
         return func.HttpResponse(
