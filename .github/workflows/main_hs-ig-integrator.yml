@@ -59,13 +59,19 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip     
         
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_63AC3FA0016D42D3B1375B1F01665A25 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_041650DAABEB4457810C0B148A522604 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C6228601B2E74C438754DD0C07BCD5F4 }}
+
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: 'agilysys-etl'
+          app-name: 'hs-ig-integrator'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7813FE350F5A4DB8B2D3CC0FE177D05D }}
