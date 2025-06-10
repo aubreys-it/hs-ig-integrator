@@ -33,13 +33,14 @@ def create_employee_file(json_data):
         HireDate = row['HireDate']
         BirthDate = row['BirthDate']
         EmpStatus = row['EmpStatus']
+        logging.info(f"Processing employee: {EmpID}, Store: {StoreNum}")
 
         out_row = f"{CompanyNumber}|{ConceptNumber}|{StoreNum}|{EmpID}|{FirstName}|" \
             f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
             f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}||{BirthDate}|{EmpStatus}\n"
         out_file.append(out_row)
     return ''.join(out_file)
-    
+
 def get_blob_folder():
     today = datetime.datetime.now()
     container = ContainerClient.from_container_url(uploads_url)
