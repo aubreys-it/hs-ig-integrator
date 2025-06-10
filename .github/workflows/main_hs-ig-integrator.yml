@@ -69,6 +69,9 @@ jobs:
         with:
           app-name: 'hs-ig-integrator'
           slot-name: 'Production'
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2F7739D2A3BA49D8A2DC814C6E576462 }}
+          
           
