@@ -13,7 +13,6 @@ def create_employee_file(json_data):
     data = json.loads(json_data)
     out_file=[]
     for row in data:
-        logging.info(f"{row['EmpID']}: {row['StoreNum']}")
         CompanyNumber = company_id
         ConceptNumber = concepts.get(row['StoreNum'], 99)  # Default to 99 if not found
         StoreNum = row['StoreNum']
