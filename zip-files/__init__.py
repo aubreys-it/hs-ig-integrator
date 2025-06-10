@@ -1,19 +1,82 @@
 import azure.functions as func
-import logging, zipfile
+import logging, os
+from zipfile import ZipFile
+from datetime import datetime
 from azure.storage.blob import ContainerClient
 from ..modules import core
 import json
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
+    tempPath = os.environ.get('TEMP', '/tmp')
+    zipfile_name = 'aubreysinc_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '.zip'
+    logging.info(f'Temporary path: {tempPath}')
+    logging.info(f'Zip file name: {zipfile_name}')
 
-    try:
-        req_body = str(req.get_json()).replace("'", '"')
-    except ValueError:
-        pass
+    '''go through all the blob folders and look for one that starts with todays date. then zip the folder with all of its contents'''
+    container_client = ContainerClient.from_container_url(os.environ.get('UPLOADS_URL'))
+    blobs_list = container_client.list_blobs()
+    req_body = None
+    for blob in blobs_list:
+        if blob.name.startswith(datetime.today().strftime('%Y%m%d')):
+            logging.info(f'Found blob: {blob.name}')
+            blob_client = container_client.get_blob_client(blob)
+            with open(os.path.join(tempPath, zipfile_name), 'wb') as f:
+                data = blob_client.download_blob()
+                f.write(data.readall())
+            req_body = core.zip_folder(os.path.join(tempPath, zipfile_name), tempPath)
+            logging.info(f'Zipped folder: {zipfile_name}')
+    if not req_body:
+        logging.info('No blobs found for today.')
+        return func.HttpResponse(
+            "No blobs found for today",
+            status_code=404
+        )
+    # Return the zip file content as a response
+    if req_body and isinstance(req_body, str):
+        req_body = {'zip_file': req_body}
+        blob_client = container_client.get_blob_client(zipfile_name)
+        blob_client.upload_blob(req_body, overwrite=True)
+    elif req_body and isinstance(req_body, list):
+        req_body = {'zip_files': req_body}
+    else:
+        logging.error('Unexpected response format from zip_folder function.')
+        return func.HttpResponse(
+            "Error processing zip files",
+            status_code=500
+        )
+    # If req_body is not None, return it as a JSON response
+    logging.info(f'Returning response: {req_body}')
 
-    req_body = {"folder": core.get_blob_folder()}    
-    logging.info(f"Request body: {req_body}")
+    
 
     if req_body:
         return json.dumps(req_body)
