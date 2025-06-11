@@ -29,13 +29,14 @@ def create_employee_file(json_data):
         FireDate = row['FireDate']
         Nickname = row['Nickname']
         HireDate = row['HireDate']
+        HrID = EmpID
         BirthDate = row['BirthDate']
         EmpStatus = row['EmpStatus']
 
         if ConceptNumber !=99:
             out_row = f"{CompanyNumber}|{ConceptNumber}|{StoreNum}|{EmpID}|{FirstName}|" \
                 f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
-                f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}||{BirthDate}|{EmpStatus}\n"
+                f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}|{HrID}|{BirthDate}|{EmpStatus}\n"
             out_file.append(out_row)
         
     return ''.join(out_file)
