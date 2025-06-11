@@ -6,7 +6,7 @@ from azure.storage.blob import ContainerClient
 import json
 
 # This Azure Function zips files from a specified Azure Blob Storage container
-# that match today's date and uploads the zip file back to a 'zipped' folder in the same container.
+# that match today's date and uploads the zip file back to a '__zipped' folder in the same container.
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     
@@ -32,8 +32,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         'message': 'Zip file created successfully'
     }
     logging.info(f'Returning response: {req_body}')
-
-    
 
     if req_body:
         return json.dumps(req_body)
