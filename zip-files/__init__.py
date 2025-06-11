@@ -23,7 +23,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     zip_buffer.seek(0)
 
     blob_client = container_client.get_blob_client('test.zip')
-    blob_client.upload_blob(zip.buffer.getvalue(), overwrite=True)
+    blob_client.upload_blob(zip_buffer.getvalue(), overwrite=True)
     # If req_body is not None, return it as a JSON response
     req_body = {
         'message': 'Zip file created successfully'
