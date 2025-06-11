@@ -28,7 +28,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 # Upload the blob data to the FTP server
                 sftp.putfo(
                     file=blob_data,
-                    remotepath=f'/datastore/Import/{blob.name}'
+                    remotepath=f'datastore/Import/{blob.name}'
                 )
 
     req_body = {
