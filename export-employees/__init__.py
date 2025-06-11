@@ -38,6 +38,7 @@ def create_employee_file(json_data):
                 f"{LastName}|{PhoneNo}|{SmsNo}||{Address1}|{City}|{Province_State}|" \
                 f"{PostalCode}|{FireDate}|{Nickname}|{HireDate}|{HrID}|{BirthDate}|{EmpStatus}\n"
             out_file.append(out_row)
+            logging.info(f"{out_row}")
         
     return ''.join(out_file)
 
