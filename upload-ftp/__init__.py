@@ -21,8 +21,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     for blob in blobs:
         if datetime.today().strftime('%Y%m%d') in blob.name and blob.name.endswith('.zip'):
             logging.info(f'Processing blob: {blob.name}')
-            blob_name = blob.name
-            blob_client = container_client.get_blob_client(blob_name)
+            blob_name = blob.name[blob.name.rfind('/') + 1:]  # Extract the blob name without the path
+            logging.info(f'Blob name extracted: {blob_name}')
+            blob_client = container_client.get_blob_client(blob.name)
 
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(blob_client.download_blob().readall())
@@ -32,9 +33,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             # Connect to the FTP server
             with pysftp.Connection(host=ftp_host, username=ftp_user, password=ftp_pass, cnopts=cnopts) as sftp:
                 # Upload the blob data to the FTP server
-                remote_path= f"/datastore/Import/{blob_name}"
-                sftp.put(temp_file_path, remote_path)
-            logging.info(f'File {blob_name} uploaded to FTP server at {remote_path}')
+                sftp.put(temp_file_path, f"/datastore/Import/{blob_name}")
             
             # Clean up the temporary file
             os.remove(temp_file_path)
