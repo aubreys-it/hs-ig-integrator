@@ -19,7 +19,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     blobs=container_client.list_blobs()
     
     for blob in blobs:
-        if datetime.today().strftime('%Y%m%d') in blob.name:
+        if datetime.today().strftime('%Y%m%d') in blob.name and blob.name.endswith('.zip'):
+            logging.info(f'Processing blob: {blob.name}')
             blob_name = blob.name
             blob_client = container_client.get_blob_client(blob_name)
 
@@ -33,6 +34,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 # Upload the blob data to the FTP server
                 sftp.put(temp_file_path, f"/datastore/Import/{blob_name}")
             logging.info(f'File {blob.name} uploaded to FTP server successfully.')
+            break  # Exit after processing the first matching blob
 
     req_body = {
         'message': 'Zip file uploaded successfully'
