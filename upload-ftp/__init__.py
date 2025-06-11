@@ -24,7 +24,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             blob_data = blob_client.download_blob().readall()
 
             # Connect to the FTP server
-            with sftp.Connection(host=ftp_host, username=ftp_user, password=ftp_pass, cnopts=cnopts) as sftp:
+            with pysftp.Connection(host=ftp_host, username=ftp_user, password=ftp_pass, cnopts=cnopts) as sftp:
                 # Upload the blob data to the FTP server
                 sftp.putfo(
                     file=blob_data,
