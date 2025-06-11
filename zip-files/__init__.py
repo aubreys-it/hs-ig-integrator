@@ -24,7 +24,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     zip_buffer.seek(0)
 
-    blob_client = container_client.get_blob_client('zipped/' + zip_file_name)
+    blob_client = container_client.get_blob_client('__zipped/' + zip_file_name)
     # Upload the zip file to the blob storage
     blob_client.upload_blob(zip_buffer.getvalue(), overwrite=True)
     # If req_body is not None, return it as a JSON response
