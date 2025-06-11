@@ -1,5 +1,5 @@
 import azure.functions as func
-import logging, os
+import logging, os, tempfile
 import pysftp
 from datetime import datetime
 from azure.storage.blob import ContainerClient
@@ -21,15 +21,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     for blob in blobs:
         if datetime.today().strftime('%Y%m%d') in blob.name:
             blob_client = container_client.get_blob_client(blob.name)
-            blob_data = blob_client.download_blob().readall()
+
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(blob_client.download_blob().readall())
+                temp_file_path = temp_file.name
+                logging.info(f'Temporary file created at: {temp_file_path}')
 
             # Connect to the FTP server
             with pysftp.Connection(host=ftp_host, username=ftp_user, password=ftp_pass, cnopts=cnopts) as sftp:
                 # Upload the blob data to the FTP server
-                sftp.putfo(
-                    flo=blob.name,
-                    remotepath=f'datastore/Import/{blob.name}'
-                )
+                sftp.put(temp_file_path, f"/datastore/Import/{blob.name}")
+            logging.info(f'File {blob.name} uploaded to FTP server successfully.')
 
     req_body = {
         'message': 'Zip file uploaded successfully'
