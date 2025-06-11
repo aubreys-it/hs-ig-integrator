@@ -32,7 +32,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             # Connect to the FTP server
             with pysftp.Connection(host=ftp_host, username=ftp_user, password=ftp_pass, cnopts=cnopts) as sftp:
                 # Upload the blob data to the FTP server
-                sftp.put(temp_file_path, f"/datastore/Import/{blob_name}")
+                sftp.put(temp_file_path, f"/datastore/Import/test_upload.txt")
             logging.info(f'File {blob.name} uploaded to FTP server successfully.')
             break  # Exit after processing the first matching blob
 
