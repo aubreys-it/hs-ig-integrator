@@ -20,7 +20,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             if datetime.today().strftime('%Y%m%d') in blob.name and blob.name.endswith('.txt'):
                 blob_client = container_client.get_blob_client(blob.name)
                 blob_data = blob_client.download_blob().readall()
-                zip_file.writestr(blob.name, blob_data)
+                zip_file.writestr(blob.name[blob.name.rfind('/')+1:], blob_data)
 
     zip_buffer.seek(0)
 
