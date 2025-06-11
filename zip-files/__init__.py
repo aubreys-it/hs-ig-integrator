@@ -17,7 +17,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
         for blob in blobs:
-            if datetime.today().strftime('%Y%m%d') in blob.name:
+            if datetime.today().strftime('%Y%m%d') in blob.name and blob.name.endswith('.txt'):
                 blob_client = container_client.get_blob_client(blob.name)
                 blob_data = blob_client.download_blob().readall()
                 zip_file.writestr(blob.name, blob_data)
