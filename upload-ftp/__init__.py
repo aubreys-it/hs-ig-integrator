@@ -27,7 +27,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             with pysftp.Connection(host=ftp_host, username=ftp_user, password=ftp_pass, cnopts=cnopts) as sftp:
                 # Upload the blob data to the FTP server
                 sftp.putfo(
-                    file=blob_data,
+                    flo=blob_data,
                     remotepath=f'datastore/Import/{blob.name}'
                 )
 
