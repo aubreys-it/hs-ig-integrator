@@ -1,6 +1,5 @@
 import azure.functions as func
 import logging
-import os
 import io
 import zipfile
 import json

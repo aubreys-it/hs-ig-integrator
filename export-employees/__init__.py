@@ -1,8 +1,10 @@
 import azure.functions as func
-import logging, os, json
+import logging
+import json
 from datetime import datetime
 from azure.storage.blob import ContainerClient
-from ..modules import core, globals as g
+from ..modules import hsfunc
+from ..modules import hsglob as g
 
 # Constants
 company_id = g.company_id
@@ -42,7 +44,7 @@ def create_employee_file(json_data):
 
 def upload_employee_file(out_file):
     container = ContainerClient.from_container_url(uploads_url)
-    blob_name = f"{core.get_blob_folder()}/empl_master_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    blob_name = f"{hsfunc.get_blob_folder()}/empl_master_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     blob_client = container.get_blob_client(blob_name)
     blob_client.upload_blob(out_file, overwrite=True)
     return {"blob_file": f"{uploads_url}/{blob_name}"}
