@@ -1,21 +1,24 @@
 import azure.functions as func
-import logging, os, tempfile
+import logging
+import os
+import tempfile
 import pysftp
 from datetime import datetime
-from azure.storage.blob import ContainerClient
 import json
+from azure.storage.blob import ContainerClient
+from ..modules import hsglob as g
 
 # This function uploads a zip file to the HS FTP server from Azure Blob Storage
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
-    ftp_host = os.environ.get('FTP_HOST')
-    ftp_user = os.environ.get('FTP_USER')
-    ftp_pass = os.environ.get('FTP_PASS')
+    ftp_host = g.ftp_host
+    ftp_user = g.ftp_user
+    ftp_pass = g.ftp_pass
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
 
-    container_client = ContainerClient.from_container_url(os.environ.get('UPLOADS_URL'))
+    container_client = ContainerClient.from_container_url(g.uploads_url)
     blobs=container_client.list_blobs()
     
     for blob in blobs:

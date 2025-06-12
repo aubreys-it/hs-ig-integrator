@@ -2,13 +2,12 @@ import azure.functions as func
 import logging, os, json
 from datetime import datetime
 from azure.storage.blob import ContainerClient
-from ..modules import core
+from ..modules import core, globals as g
 
-uploads_url = os.environ.get("UPLOADS_URL")
-company_id = 964328777
-concepts = {
-    5: 1590
-}
+# Constants
+company_id = g.company_id
+concepts = g.concepts
+uploads_url = g.uploads_url
 
 def create_employee_file(json_data):
     data = json.loads(json_data)

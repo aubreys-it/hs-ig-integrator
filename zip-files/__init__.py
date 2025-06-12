@@ -1,16 +1,22 @@
 import azure.functions as func
-import logging, os, io
+import logging
+import os
+import io
 import zipfile
+import json
 from datetime import datetime
 from azure.storage.blob import ContainerClient
-import json
+from ..modules import hsglob as g
+
+#Constants
+uploads_url = g.uploads_url
 
 # This Azure Function zips files from a specified Azure Blob Storage container
 # that match today's date and uploads the zip file back to a '__zipped' folder in the same container.
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     
-    container_client = ContainerClient.from_container_url(os.environ.get('UPLOADS_URL'))
+    container_client = ContainerClient.from_container_url(uploads_url)
     blobs=container_client.list_blobs()
     zip_buffer = io.BytesIO()
     zip_file_name = 'aubreysinc_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '.zip'
