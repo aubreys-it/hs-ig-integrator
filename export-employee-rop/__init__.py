@@ -21,7 +21,7 @@ def create_rop_file(json_data):
         EmpID = row['EmpID']
         JobNo = row['JobNo']
         PayRate = row['PayRate']
-        OvertimeFactor = row['OvertimeFactor']
+        OvertimeFactor = row['OverTimeFactor']
         PrimaryFlag = row['PrimaryFlag']
 
         if ConceptNumber !=99:
