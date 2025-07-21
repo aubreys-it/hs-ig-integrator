@@ -26,7 +26,7 @@ def create_rop_file(json_data):
 
         if ConceptNumber !=99:
             out_row = f"{CompanyNumber}|{ConceptNumber}|{StoreNum}|{EmpID}|" \
-                f"{JobNo}|{PayRate}|{OvertimeFactor}||{PrimaryFlag}\n"
+                f"{JobNo}|{PayRate}|{OvertimeFactor}|{PrimaryFlag}\n"
             out_file.append(out_row)
         
     return ''.join(out_file)
