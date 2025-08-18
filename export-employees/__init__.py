@@ -30,7 +30,7 @@ def create_employee_file(json_data):
         FireDate = row['FireDate']
         Nickname = row['Nickname']
         HireDate = row['HireDate']
-        HrID = row['hrID']
+        HrID = row['hrId']
         BirthDate = row['BirthDate']
         EmpStatus = row['EmpStatus']
 
