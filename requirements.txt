@@ -4,4 +4,5 @@
 
 azure-functions
 azure-storage-blob==12.8.0
-pysftp
+pysftp==0.2.9
+paramiko<3.0
