@@ -1,3 +1,8 @@
+"""*****************************************************************************************************************
+This function has been deprecated and replaced by the Azure Data Factory pipeline
+'Export Employees Data to HS Cloud Storage'. Please use that pipeline for exporting employee ROP data.
+*****************************************************************************************************************"""
+
 import azure.functions as func
 import logging
 import json
