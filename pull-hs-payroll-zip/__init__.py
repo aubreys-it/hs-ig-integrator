@@ -1,8 +1,9 @@
 # =============================================================================
 # FILE: __init__.py
 # REPO PATH: hs-ig-integrator/pull-hs-payroll-zip/__init__.py
-# (NEW function folder - create pull-hs-payroll-zip/ and save this file in it
-#  as __init__.py)
+# (OVERWRITES the existing file. Only change: matches the payroll zip by its
+#  exact name, HS_data_export_[yyyyMMdd]_0115.zip, instead of any
+#  HS_data_export_[yyyyMMdd]_*.zip - HS also drops a daily _0100.zip.)
 # =============================================================================
 
 import azure.functions as func
@@ -17,10 +18,18 @@ from paramiko.ssh_exception import SSHException
 from datetime import datetime
 from ..modules import hsglob as g
 
+# Suffix of the HS payroll export zip: HS_data_export_[yyyyMMdd]_0115.zip
+PAYROLL_ZIP_SUFFIX = '_0115.zip'
+
 # This function pulls the HotSchedules payroll export zip from the HS SFTP
-# server (/datastore/Export/HS_data_export_[yyyyMMdd]_####.zip) and lands it
+# server (/datastore/Export/HS_data_export_[yyyyMMdd]_0115.zip) and lands it
 # unmodified on aubdatain at hot-schedules/clock-data/zip/. Unzipping and
 # per-location distribution happens in unpack-hs-payroll-zip.
+#
+# HS drops more than one HS_data_export_[yyyyMMdd]_*.zip per day (e.g. a daily
+# _0100.zip). Only the _0115 zip is the payroll export, so the file is matched
+# by exact name. If HS ever changes that suffix, this returns 404 - update
+# PAYROLL_ZIP_SUFFIX above.
 #
 # File mechanics only - no SQL. ADF owns the dim.dates.isPayrollMonday check,
 # the pr.fn_get_active_run_id lookup, and all pr.pipeline_audit writes, using
@@ -97,7 +106,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.info(f'pull-hs-payroll-zip starting for file_date={file_date_str}')
 
-    expected_prefix = f'HS_data_export_{file_date_str}_'
+    expected_name = f'HS_data_export_{file_date_str}{PAYROLL_ZIP_SUFFIX}'
     matched_filename = None
     temp_file_path = None
 
@@ -108,17 +117,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # Find and download the expected zip from the HS SFTP server
         with _connect(g.ftp_host, g.ftp_user, g.ftp_pass, hs_keys, 'FTP_HOSTKEY') as hs_sftp:
             remote_files = hs_sftp.listdir(g.hs_export_path)
-            candidates = [f for f in remote_files if f.startswith(expected_prefix) and f.endswith('.zip')]
+            candidates = [f for f in remote_files if f == expected_name]
 
             if len(candidates) == 0:
                 return _error_response(
-                    f'No file matching {expected_prefix}*.zip found in {g.hs_export_path} on the HS SFTP server.',
+                    f'No file named {expected_name} found in {g.hs_export_path} on the HS SFTP server.',
                     status_code=404
                 )
 
             if len(candidates) > 1:
                 return _error_response(
-                    f'Multiple files matched {expected_prefix}*.zip in {g.hs_export_path}: {candidates}'
+                    f'Multiple files named {expected_name} in {g.hs_export_path}: {candidates}'
                 )
 
             matched_filename = candidates[0]
