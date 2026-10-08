@@ -38,5 +38,5 @@ ftp_hostkey = os.environ.get('FTP_HOSTKEY')
 aubdatain_sftp_hostkey = os.environ.get('AUBDATAIN_SFTP_HOSTKEY')
 
 # SFTP paths on aubdatain (container/folder)
-hs_zip_path = 'hot-schedules/clock-data/zip'
-hs_clock_data_path = 'hot-schedules/clock-data'
+hs_zip_path = 'clock-data/zip'
+hs_clock_data_path = 'clock-data'
